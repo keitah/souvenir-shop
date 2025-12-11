@@ -1,0 +1,19 @@
+spring:
+  datasource:
+    url: ${SPRING_DATASOURCE_URL:jdbc:postgresql://localhost:5432/souvenir_shop}
+    username: ${SPRING_DATASOURCE_USERNAME:souvenir}
+    password: ${SPRING_DATASOURCE_PASSWORD:souvenir}
+  jpa:
+    hibernate:
+      ddl-auto: update
+    properties:
+      hibernate:
+        format_sql: true
+    show-sql: true
+
+server:
+  port: 8080
+
+jwt:
+  secret: "super-secret-key-change-me-please-very-long-string-1234567890"
+  expiration-minutes: 60

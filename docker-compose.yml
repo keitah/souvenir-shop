@@ -1,0 +1,45 @@
+version: "3.9"
+
+services:
+  postgres:
+    image: postgres:16-alpine
+    container_name: souvenir_postgres
+    environment:
+      POSTGRES_DB: souvenir_shop
+      POSTGRES_USER: souvenir
+      POSTGRES_PASSWORD: souvenir
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+
+  backend:
+    build: ./backend
+    container_name: souvenir_backend
+    depends_on:
+      - postgres
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/souvenir_shop
+      SPRING_DATASOURCE_USERNAME: souvenir
+      SPRING_DATASOURCE_PASSWORD: souvenir
+      # Папка для загрузки картинок
+      APP_UPLOAD_DIR: /uploads
+    volumes:
+      - uploads:/uploads
+    ports:
+      - "8080:8080"
+
+  frontend:
+    build: ./frontend
+    container_name: souvenir_frontend
+    depends_on:
+      - backend
+    volumes:
+      # В nginx папка uploads будет доступна как /uploads/...
+      - uploads:/usr/share/nginx/html/uploads
+    ports:
+      - "3000:80"
+
+volumes:
+  postgres_data:
+  uploads:
